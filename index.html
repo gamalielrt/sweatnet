@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+    <script src="assets/OrbitControls.js"></script>
+    <script src="assets/OBJLoader.js"></script>
+    <script>
+
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        
+        var renderer = new THREE.WebGLRenderer({antialias: true});
+        //renderer.setClearColor("#e5e5e5");
+        renderer.setSize( window.innerWidth, window.innerHeight ); 
+
+        var keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
+        keyLight.position.set(-100, 0, 100);
+
+        var fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
+        fillLight.position.set(100, 0, 100);
+
+        var backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        backLight.position.set(100, 0, -100).normalize();
+
+        scene.add(keyLight);
+        scene.add(fillLight);
+        scene.add(backLight);
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setPath('assets/');
+        objLoader.load('Harpsichord6v1.obj', function(object){
+            object.position.y -= 60;
+            scene.add(object);
+        })
+
+        document.body.appendChild( renderer.domElement );
+
+        camera.position.z = 1000;
+
+        var controls = new THREE.OrbitControls(camera,renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.25;
+        controls.enableZoom = true;
+        
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            
+            camera.updateProjectMatrix();
+        })
+
+        var geometry = new THREE.BoxGeometry(1,1,1);
+        var material = new THREE.MeshLambertMaterial({color: 0xF7F7F7});
+
+        var mesh = new THREE.Mesh(geometry, material);
+
+        scene.add(mesh);
+
+        var animate = function () {
+            requestAnimationFrame( animate );
+
+         //   controls.update();
+
+            renderer.render(scene, camera);
+        }
+        animate();
+       
+    </script>
+</body>
+</html>

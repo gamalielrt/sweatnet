@@ -43,7 +43,8 @@
 
         document.body.appendChild( renderer.domElement );
 
-        camera.position.z = 1000;
+        camera.position.z = -1000;
+        camera.position.y = 500;
 
         var controls = new THREE.OrbitControls(camera,renderer.domElement);
         controls.enableDamping = true;
